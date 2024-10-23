@@ -12,20 +12,6 @@ class Borrowing(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="borrowings"
     )
 
-    def save(self, *args, **kwargs):
-        if not self.pk:
-            if self.book.inventory <= 0:
-                raise ValueError("No more copies of the book " "available to borrow.")
-            self.book.inventory -= 1
-            self.book.save()
-
-        super().save(*args, **kwargs)
-
-    def return_book(self):
-        if self.actual_return_date:
-            self.book.inventory += 1
-            self.book.save()
-
     def __str__(self):
         return (
             f"{self.book.title} borrowed by " f"{self.user.email} on {self.borrow_date}"
