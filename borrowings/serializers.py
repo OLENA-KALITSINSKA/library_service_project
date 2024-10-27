@@ -14,6 +14,20 @@ class BorrowingSerializer(serializers.ModelSerializer):
             "book",
             "user",
         )
+        read_only_fields = ("user",)
+
+    def validate_book(self, value):
+        if value.inventory < 1:
+            raise serializers.ValidationError("No inventory available for this book.")
+        return value
+
+    def create(self, validated_data):
+        book = validated_data["book"]
+        book.inventory -= 1
+        book.save()
+
+        validated_data["user"] = self.context["request"].user
+        return super().create(validated_data)
 
 
 class BorrowingListSerializer(BorrowingSerializer):
