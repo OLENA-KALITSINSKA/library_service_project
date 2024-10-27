@@ -28,3 +28,11 @@ class BorrowingViewSet(
             return BorrowingDetailSerializer
 
         return BorrowingSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        queryset = super().get_queryset()
+
+        if not user.is_staff:
+            queryset = queryset.filter(user=user)
+        return queryset
