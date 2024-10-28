@@ -58,3 +58,11 @@ class ReturnBookSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("This book has already been returned.")
         return super().validate(attrs)
 
+    def update(self, instance, validated_data):
+        actual_return_date = validated_data.get("actual_return_date", date.today())
+        instance.actual_return_date = actual_return_date
+
+        instance.book.inventory = F("inventory") + 1
+        instance.book.save()
+        instance.save()
+        return instance
