@@ -1,3 +1,5 @@
+from datetime import date
+from django.db.models import F
 from rest_framework import serializers
 from books.serializers import BookListSerializer
 from borrowings.models import Borrowing
@@ -43,3 +45,16 @@ class BorrowingDetailSerializer(BorrowingSerializer):
     class Meta:
         model = Borrowing
         fields = BorrowingSerializer.Meta.fields + ("actual_return_date",)
+
+
+class ReturnBookSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Borrowing
+        fields = ["actual_return_date"]
+
+    def validate(self, attrs):
+        instance = self.instance
+        if instance.actual_return_date is not None:
+            raise serializers.ValidationError("This book has already been returned.")
+        return super().validate(attrs)
+
