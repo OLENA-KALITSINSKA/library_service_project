@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "users",
     "borrowings",
     "rest_framework.authtoken",
+    "django_q",
 ]
 
 MIDDLEWARE = [
@@ -141,4 +142,15 @@ SIMPLE_JWT = {
     "ROTATE_REFRESH_TOKENS": False,
     "AUTH_HEADER_TYPES": ("Bearer",),
     "AUTH_HEADER_NAME": "HTTP_AUTHORIZE",
+}
+
+Q_CLUSTER = {
+    "name": "DjangORM",
+    "workers": 4,
+    "recycle": 500,
+    "timeout": 90,
+    "retry": 120,
+    "django_redis": "default",
+    "bulk": 10,
+    "orm": "default",
 }
