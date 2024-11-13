@@ -2,6 +2,8 @@ from datetime import date
 
 import logging
 
+from drf_spectacular.utils import extend_schema, OpenApiParameter, OpenApiResponse
+
 from rest_framework import status, mixins
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -97,3 +99,20 @@ class BorrowingViewSet(
             logger.error(
                 f"Failed to schedule notification for borrowing ID {borrowing_id}: {e}"
             )
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "is_active",
+                description="Filter by active borrowings (true/false)",
+                type=str,
+            ),
+            OpenApiParameter(
+                "user_id",
+                description="Filter borrowings by user ID (staff only)",
+                type=int,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
