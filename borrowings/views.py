@@ -29,6 +29,19 @@ class BorrowingViewSet(
     mixins.CreateModelMixin,
     GenericViewSet,
 ):
+    """
+    API endpoint for managing borrowings.
+
+    - **List borrowings**: List all borrowings with optional filters for active status and user ID.
+    - **Retrieve borrowing**: Get detailed information for a specific borrowing.
+    - **Create borrowing**: Create a new borrowing record.
+    - **Return book** (custom action): Mark a borrowed book as returned.
+
+    **Filters**:
+    - `is_active`: Filter active/inactive borrowings.
+    - `user_id`: Filter by user ID (only for staff users).
+    """
+
     queryset = Borrowing.objects.all()
     permission_classes = [IsAuthenticated]
 
