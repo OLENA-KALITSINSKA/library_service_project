@@ -54,6 +54,18 @@ class BorrowingViewSet(
 
         return queryset
 
+    @extend_schema(
+        summary="Return a borrowed book",
+        description=(
+            "Marks a book as returned for the specified borrowing record. "
+            "If the book is already returned, a 400 Bad Request response is returned. "
+            "If successful, a notification is scheduled about the return."
+        ),
+        responses={
+            200: ReturnBookSerializer,
+            400: OpenApiResponse(description="This book has already been returned."),
+        },
+    )
     @action(detail=True, methods=["put"], url_path="return")
     def return_book(self, request, pk=None):
         borrowing = self.get_object()
